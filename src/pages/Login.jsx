@@ -1,56 +1,89 @@
-// 📁 src/pages/Login.jsx
-import { useState } from 'react'
+// src/pages/Login.jsx
+import { useState } from 'react';
+import { supabase } from '../supabase'; // Verifique se o caminho está correto
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
-  const [email, setEmail] = useState('')
-  const [senha, setSenha] = useState('')
+  const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-  function handleLogin(e) {
-    e.preventDefault()
-    console.log('Futuro login com Supabase', email, senha)
-    // 🔁 Redireciona para a rota do Simulador
-    window.location.href = '/simulador'
-  }
+  const handleAuth = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      let response;
+      if (isLogin) {
+        // Lógica de Login
+        response = await supabase.auth.signInWithPassword({ email, password });
+      } else {
+        // Lógica de Registo
+        response = await supabase.auth.signUp({ email, password });
+      }
+
+      if (response.error) throw response.error;
+
+      // Se o login/registo for bem-sucedido, navega para a página principal
+      navigate('/'); 
+
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] text-white flex items-center justify-center px-4">
-      <form onSubmit={handleLogin} className="bg-zinc-900 p-8 rounded-2xl shadow-2xl w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-[#008CFF] to-[#ED195C] bg-clip-text text-transparent">
-          Entrar na Bússola
+    <div className="min-h-screen bg-[#0f0f0f] text-white flex flex-col items-center justify-center p-4">
+      <img
+          src="/logo-legiao.png"
+          alt="Logo Legião"
+          className="w-40 md:w-60 mb-6 drop-shadow-[0_0_20px_rgba(0,140,255,0.4)]"
+      />
+      <div className="w-full max-w-md bg-zinc-900 p-8 rounded-2xl shadow-2xl border border-zinc-800">
+        <h1 className="text-3xl font-bold text-center mb-2 text-gradient">
+          {isLogin ? 'Acessar Bússola' : 'Criar Conta'}
         </h1>
+        <p className="text-center text-zinc-400 text-sm mb-6">
+          {isLogin ? 'Bem-vindo de volta, Estratega.' : 'Comece sua jornada para a excelência.'}
+        </p>
 
-        <div className="flex flex-col mb-4">
-          <label className="text-sm mb-1">E-mail</label>
+        <form onSubmit={handleAuth} className="space-y-4">
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="input"
-            placeholder="exemplo@email.com"
+            className="input w-full"
+            placeholder="seu@email.com"
             required
           />
-        </div>
-
-        <div className="flex flex-col mb-6">
-          <label className="text-sm mb-1">Senha</label>
           <input
             type="password"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            className="input"
-            placeholder="********"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="input w-full"
+            placeholder="••••••••••"
             required
           />
+
+          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+          
+          <button type="submit" className="btn-legiao w-full" disabled={loading}>
+            {loading ? 'Aguarde...' : (isLogin ? 'Entrar' : 'Registrar')}
+          </button>
+        </form>
+
+        <div className="mt-6 text-center">
+          <button onClick={() => setIsLogin(!isLogin)} className="text-sm text-zinc-400 hover:text-white hover:underline">
+            {isLogin ? 'Não tem uma conta? Registre-se' : 'Já tem uma conta? Faça login'}
+          </button>
         </div>
-
-        <button className="btn-legiao">Entrar</button>
-
-
-        <div className="mt-4 text-sm text-zinc-400 text-center">
-          <p className="hover:underline cursor-pointer">Esqueceu a senha?</p>
-          <p className="hover:underline cursor-pointer mt-1">Criar nova conta</p>
-        </div>
-      </form>
+      </div>
     </div>
-  )
+  );
 }

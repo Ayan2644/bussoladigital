@@ -10,10 +10,11 @@ import Simulador from './pages/Simulador';
 import Planejamento from './pages/Planejamento';
 import Conta from './pages/Conta';
 
-// Novas ferramentas
+// Ferramentas
 import Sonar from './pages/Sonar';
-import Metricas from './pages/Metricas';
+import MetricasAgendamento from './pages/MetricasAgendamento';
 import CPAMaximo from './pages/CPAMaximo';
+import AnalisadorIA from './pages/AnalisadorIA';
 
 // Layout com menu lateral
 import Layout from './components/Layout';
@@ -25,16 +26,17 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         {/* Rota isolada da tela de login */}
         <Route path="/login" element={<Login />} />
 
-        {/* Redirecionamento raiz para a primeira ferramenta */}
-        <Route path="/" element={<Navigate to="/planejamento" />} />
+        {/* Redirecionamento da raiz para a primeira ferramenta */}
+        <Route path="/" element={<Navigate to="/planejamento" replace />} />
 
-        {/* Rotas com menu lateral */}
+        {/* Rotas que usam o Layout com menu lateral */}
         <Route path="/" element={<Layout />}>
           <Route path="planejamento" element={<Planejamento />} />
           <Route path="simulador" element={<Simulador />} />
           <Route path="sonar" element={<Sonar />} />
-          <Route path="metricas" element={<Metricas />} />
+          <Route path="metricas-agendamento" element={<MetricasAgendamento />} />
           <Route path="cpa-maximo" element={<CPAMaximo />} />
+          <Route path="analisador-ia" element={<AnalisadorIA />} />
           <Route path="conta" element={<Conta />} />
         </Route>
       </Routes>

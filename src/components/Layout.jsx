@@ -7,8 +7,9 @@ export default function Layout() {
     { href: "/planejamento", label: "🧠 Planejamento" },
     { href: "/simulador", label: "📊 Simulador" },
     { href: "/sonar", label: "📡 Sonar" },
-    { href: "/metricas", label: "📈 Métricas" },
+    { href: "/metricas-agendamento", label: "🗓️ Métricas de Agendamento" },
     { href: "/cpa-maximo", label: "🎯 CPA Máximo" },
+    { href: "/analisador-ia", label: "🤖 Gestor de Tráfego Sênior" },
     { href: "/conta", label: "👤 Conta" },
   ];
 
@@ -47,7 +48,7 @@ export default function Layout() {
       </aside>
 
       {/* CONTEÚDO PRINCIPAL */}
-      <main className="flex-1 p-4 md:p-6">
+      <main className="flex-1 p-4 md:p-6 overflow-y-auto">
         <Outlet />
       </main>
     </div>

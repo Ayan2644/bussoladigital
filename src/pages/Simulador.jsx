@@ -1,3 +1,5 @@
+// src/pages/Simulador.jsx
+
 import { useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import {
@@ -8,6 +10,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import PageHeader from '../components/ui/PageHeader'; // Importamos o novo cabeçalho
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
@@ -33,12 +36,10 @@ export default function Simulador() {
 
     const {
       valorProduto,
-      orcamento,
       gasto,
       vendas,
       ctr,
       cpc,
-      cpm,
       frequencia,
     } = form;
 
@@ -80,103 +81,39 @@ export default function Simulador() {
     }
 
     const recs = [];
-
-    // CTR
     if (Number(ctr) < 1) {
-      recs.push({
-        cor: 'red',
-        titulo: '⚠️ CTR Crítico',
-        texto: 'CTR abaixo de 1%. Reveja headline, criativo e gancho. Teste variações com contraste e gatilhos fortes.',
-      });
+      recs.push({ cor: 'red', titulo: '⚠️ CTR Crítico', texto: 'CTR abaixo de 1%. Reveja headline, criativo e gancho.' });
     } else if (Number(ctr) >= 1 && Number(ctr) < 2) {
-      recs.push({
-        cor: 'yellow',
-        titulo: '🔍 CTR Mediano',
-        texto: 'CTR entre 1% e 2%. Está ok, mas pode melhorar com testes de criativos e ganchos diferentes.',
-      });
+      recs.push({ cor: 'yellow', titulo: '🔍 CTR Mediano', texto: 'CTR entre 1% e 2%. Pode melhorar com testes.' });
     } else {
-      recs.push({
-        cor: 'green',
-        titulo: '✅ CTR Saudável',
-        texto: 'Mantenha estrutura criativa atual e escale com públicos similares.',
-      });
+      recs.push({ cor: 'green', titulo: '✅ CTR Saudável', texto: 'Mantenha estrutura criativa atual e escale.' });
     }
 
-    // CPC
     if (Number(cpc) > 2.5) {
-      recs.push({
-        cor: 'red',
-        titulo: '⚠️ CPC Elevado',
-        texto: 'CPC acima de R$2,50. Público pode estar saturado. Tente segmentações mais qualificadas.',
-      });
+      recs.push({ cor: 'red', titulo: '⚠️ CPC Elevado', texto: 'CPC acima de R$2,50. Público pode estar saturado.' });
     } else if (Number(cpc) > 1.5 && Number(cpc) <= 2.5) {
-      recs.push({
-        cor: 'yellow',
-        titulo: '🔍 CPC Mediano',
-        texto: 'CPC entre R$1,50 e R$2,50. Está razoável, mas otimize criativo ou público.',
-      });
+      recs.push({ cor: 'yellow', titulo: '🔍 CPC Mediano', texto: 'CPC entre R$1,50 e R$2,50. Otimize criativo ou público.' });
     } else {
-      recs.push({
-        cor: 'green',
-        titulo: '✅ CPC Ideal',
-        texto: 'CPC dentro do ideal. Excelente sinal de atratividade do criativo.',
-      });
+      recs.push({ cor: 'green', titulo: '✅ CPC Ideal', texto: 'CPC dentro do ideal. Excelente sinal de atratividade.' });
     }
-
-    // Frequência
+    
     if (Number(frequencia) > 2.5) {
-      recs.push({
-        cor: 'red',
-        titulo: '⚠️ Frequência Alta',
-        texto: 'Frequência acima de 2.5. Pode estar saturando. Avalie pausas ou variações criativas.',
-      });
+      recs.push({ cor: 'red', titulo: '⚠️ Frequência Alta', texto: 'Frequência acima de 2.5. Pode estar saturando.' });
     } else if (Number(frequencia) > 2 && Number(frequencia) <= 2.5) {
-      recs.push({
-        cor: 'yellow',
-        titulo: '🔍 Frequência Mediana',
-        texto: 'Atenção. Frequência se aproximando do limite. Observe sinais de queda.',
-      });
+      recs.push({ cor: 'yellow', titulo: '🔍 Frequência Mediana', texto: 'Atenção. Frequência se aproximando do limite.' });
     } else {
-      recs.push({
-        cor: 'green',
-        titulo: '✅ Frequência Saudável',
-        texto: 'Frequência saudável. Continuidade recomendada.',
-      });
+      recs.push({ cor: 'green', titulo: '✅ Frequência Saudável', texto: 'Frequência saudável. Continuidade recomendada.' });
     }
-
-    // ROAS
+    
     if (roas >= 2) {
-      recs.push({
-        cor: 'green',
-        titulo: '✅ ROAS Excelente!',
-        texto: 'ROAS acima de 2.0! Escala liberada. Expanda orçamento ou públicos imediatamente.',
-      });
+      recs.push({ cor: 'green', titulo: '✅ ROAS Excelente!', texto: 'ROAS acima de 2.0! Escala liberada.' });
     } else if (roas >= 1 && roas < 2) {
-      recs.push({
-        cor: 'yellow',
-        titulo: '🔍 ROAS Mediano',
-        texto: 'ROAS entre 1.0 e 2.0. Otimize páginas, oferta ou criativos antes de escalar.',
-      });
+      recs.push({ cor: 'yellow', titulo: '🔍 ROAS Mediano', texto: 'ROAS entre 1.0 e 2.0. Otimize antes de escalar.' });
     } else {
-      recs.push({
-        cor: 'red',
-        titulo: '⛔ ROAS Insuficiente',
-        texto: 'Está perdendo dinheiro. Testar nova estrutura do funil ou nova oferta.',
-      });
+      recs.push({ cor: 'red', titulo: '⛔ ROAS Insuficiente', texto: 'Está perdendo dinheiro. Testar nova estrutura.' });
     }
 
-    setResultado({
-      cpa,
-      roas,
-      lucro,
-      valorTotal,
-      status,
-      recs,
-      cpaMax,
-      cpaIdeal,
-      cpaMeta,
-      gasto,
-    });
+    setResultado({ cpa, roas, lucro, valorTotal, status, recs, cpaMax, cpaIdeal, cpaMeta, gasto });
   }
 
   const chartData = {
@@ -192,42 +129,27 @@ export default function Simulador() {
 
   return (
     <div className="min-h-screen bg-[#0f0f0f] text-white px-4 py-10">
-      <div className="text-center mb-10">
-        <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-[#008CFF] to-[#ED195C] text-transparent bg-clip-text">Simulador Inteligente de Escala</h1>
-        <p className="text-zinc-400">Analise suas métricas com inteligência tática</p>
-      </div>
+      <PageHeader 
+        title="Simulador Inteligente de Escala"
+        description="Analise o estado atual da sua campanha e receba recomendações táticas para escalar seus resultados com segurança e previsibilidade."
+      />
 
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-6">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-8">
         {/* BLOCO DE INPUTS */}
-        <form onSubmit={calcularMetrica} className="md:w-1/2 w-full space-y-4">
-          {[{ name: 'valorProduto', label: 'Valor do Produto (R$)' },{ name: 'orcamento', label: 'Orçamento Diário (R$)' },{ name: 'gasto', label: 'Valor Gasto Até Agora (R$)' },{ name: 'vendas', label: 'Vendas Realizadas' },{ name: 'ctr', label: 'CTR (%)' },{ name: 'cpc', label: 'CPC (R$)' },{ name: 'cpm', label: 'CPM (R$)' },{ name: 'frequencia', label: 'Frequência' }].map(({ name, label }) => (
+        <form onSubmit={calcularMetrica} className="md:w-1/2 w-full space-y-4 bg-zinc-900 p-6 rounded-2xl border border-zinc-700 self-start">
+          {[{ name: 'valorProduto', label: 'Valor do Produto (R$)' },{ name: 'orcamento', label: 'Orçamento Diário (R$)' },{ name: 'gasto', label: 'Valor Gasto (R$)' },{ name: 'vendas', label: 'Vendas Realizadas' },{ name: 'ctr', label: 'CTR (%)' },{ name: 'cpc', label: 'CPC (R$)' },{ name: 'cpm', label: 'CPM (R$)' },{ name: 'frequencia', label: 'Frequência' }].map(({ name, label }) => (
             <div key={name}>
               <label className="text-sm text-zinc-400">{label}</label>
-              <input
-                type="number"
-                step="any"
-                name={name}
-                value={form[name]}
-                onChange={handleChange}
-                className="w-full bg-zinc-900 p-3 rounded-xl mt-1"
-                required
-              />
+              <input type="number" step="any" name={name} value={form[name]} onChange={handleChange} className="w-full bg-zinc-800 p-3 rounded-xl mt-1 border border-zinc-700" required />
             </div>
           ))}
-          <button className="btn-legiao">🔍 Analisar Campanha</button>
-
+          <button className="btn-legiao w-full mt-4">🔍 Analisar Campanha</button>
         </form>
 
         {/* BLOCO DE RESULTADO */}
         {resultado && (
           <div className="md:w-1/2 w-full space-y-6">
-            <div className={`p-6 rounded-xl border ${resultado.status.cor === 'green'
-              ? 'border-green-500 bg-green-900/10'
-              : resultado.status.cor === 'red'
-              ? 'border-red-500 bg-red-900/10'
-              : resultado.status.cor === 'yellow'
-              ? 'border-yellow-400 bg-yellow-900/10'
-              : 'border-blue-400 bg-blue-900/10'}`}>
+            <div className={`p-6 rounded-xl border ${resultado.status.cor === 'green' ? 'border-green-500 bg-green-900/10' : resultado.status.cor === 'red' ? 'border-red-500 bg-red-900/10' : resultado.status.cor === 'yellow' ? 'border-yellow-400 bg-yellow-900/10' : 'border-blue-400 bg-blue-900/10'}`}>
               <h2 className="text-xl font-bold mb-2">{resultado.status.titulo}</h2>
               <p>{resultado.status.texto}</p>
             </div>
@@ -245,25 +167,15 @@ export default function Simulador() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="border border-red-500 p-4 rounded-xl text-center">
-                <strong>CPA Máximo</strong><br />R$ {resultado.cpaMax}<br />ROI 1.0
-              </div>
-              <div className="border border-yellow-400 p-4 rounded-xl text-center">
-                <strong>CPA Ideal</strong><br />R$ {resultado.cpaIdeal}<br />ROI 1.5
-              </div>
-              <div className="border border-green-500 p-4 rounded-xl text-center">
-                <strong>CPA Meta</strong><br />R$ {resultado.cpaMeta}<br />ROI 2.0
-              </div>
+              <div className="border border-red-500 p-4 rounded-xl text-center"><strong>CPA Máximo</strong><br />R$ {resultado.cpaMax}<br />ROI 1.0</div>
+              <div className="border border-yellow-400 p-4 rounded-xl text-center"><strong>CPA Ideal</strong><br />R$ {resultado.cpaIdeal}<br />ROI 1.5</div>
+              <div className="border border-green-500 p-4 rounded-xl text-center"><strong>CPA Meta</strong><br />R$ {resultado.cpaMeta}<br />ROI 2.0</div>
             </div>
 
             <div className="space-y-4">
               <h3 className="text-xl font-semibold text-cyan-400">Recomendações Técnicas:</h3>
               {resultado.recs.map((r, i) => (
-                <div key={i} className={`border-l-4 p-4 rounded-xl ${r.cor === 'green'
-                  ? 'border-green-500'
-                  : r.cor === 'red'
-                  ? 'border-red-500'
-                  : 'border-yellow-400'}`}>
+                <div key={i} className={`border-l-4 p-4 rounded-xl ${r.cor === 'green' ? 'border-green-500' : r.cor === 'red' ? 'border-red-500' : 'border-yellow-400'}`}>
                   <strong>{r.titulo}</strong><br />{r.texto}
                 </div>
               ))}
