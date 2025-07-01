@@ -1,4 +1,4 @@
-// src/pages/AnalisadorIA.jsx
+// src/pages/AnalisadorIA.jsx (Código completo e atualizado)
 
 import React, { useState } from 'react';
 import PageHeader from '../components/ui/PageHeader';
@@ -47,10 +47,17 @@ const AnalisadorIA = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Lê a chave de API da Google a partir das variáveis de ambiente
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+
   const handleAnalyze = async (e) => {
     e.preventDefault();
     if (!campaignData.trim()) {
         setError('Por favor, insira os dados da campanha para análise.');
+        return;
+    }
+    if (!apiKey) {
+        setError('A chave de API do Gemini não foi encontrada. Verifique o seu arquivo .env.');
         return;
     }
 
@@ -78,9 +85,6 @@ const AnalisadorIA = () => {
                 { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" },
             ],
         };
-        
-        // Chave de API inserida
-        const apiKey = "AIzaSyDocmx-AqUW1yxzfyFCGfsWnG69A7I_AeE";
 
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
@@ -121,7 +125,7 @@ const AnalisadorIA = () => {
         title="Gestor de Tráfego Sênior"
         description="Cole os dados de suas campanhas e receba uma análise profunda e um plano de ação tático do nosso especialista em tráfego, treinado com a documentação oficial da Meta."
       />
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-4">
         {/* Coluna de Entrada de Dados */}
         <div className="bg-zinc-900/80 border border-zinc-700 rounded-2xl p-6 flex flex-col">

@@ -1,12 +1,10 @@
-// src/pages/Conta.jsx
+// src/pages/Conta.jsx (Código completo e atualizado)
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PageHeader from '../components/ui/PageHeader';
+import { useAuth } from '../context/AuthContext'; // Importa nosso hook
 import { User, Shield, Gem, LogOut, Camera, KeyRound, AlertTriangle } from 'lucide-react';
 
-// --- COMPONENTES DE UI PERSONALIZADOS PARA ESTA PÁGINA ---
-
-// Botão para o menu de navegação lateral
 const NavLink = ({ icon: Icon, label, isActive, onClick }) => (
     <button
         onClick={onClick}
@@ -21,7 +19,6 @@ const NavLink = ({ icon: Icon, label, isActive, onClick }) => (
     </button>
 );
 
-// Card de seção para agrupar conteúdos
 const SectionCard = ({ title, children }) => (
     <div className="bg-[#161616] p-6 rounded-2xl border border-zinc-800">
         <h3 className="text-xl font-semibold text-white mb-4 pb-4 border-b border-zinc-700">{title}</h3>
@@ -31,7 +28,6 @@ const SectionCard = ({ title, children }) => (
     </div>
 );
 
-// Componente de input de texto
 const TextInput = ({ label, type = "text", value, onChange, placeholder, disabled = false }) => (
     <div>
         <label className="text-sm text-zinc-400 block mb-1">{label}</label>
@@ -46,27 +42,36 @@ const TextInput = ({ label, type = "text", value, onChange, placeholder, disable
     </div>
 );
 
-// --- COMPONENTE PRINCIPAL DA PÁGINA ---
 export default function Conta() {
-    // Estado para controlar o separador ativo
     const [activeTab, setActiveTab] = useState('perfil');
 
-    // Dados de exemplo do utilizador (seriam obtidos da sua API/Supabase)
-    const [user, setUser] = useState({
-        name: 'Ayan',
-        email: 'ayan@legiaodigital.com',
-        avatarUrl: null, // ou um URL de uma imagem
+    // Pega o utilizador e a função de logout do contexto
+    const { user, handleLogout } = useAuth();
+
+    // Estado local para os dados do formulário
+    const [userData, setUserData] = useState({
+        name: '',
+        email: '',
+        avatarUrl: null,
         plan: 'Bússola PRO',
         memberSince: '25 de Junho, 2025'
     });
-    
-    // Simulação de logout
-    const handleLogout = () => {
-        alert("Função de logout a ser implementada!");
-        // Ex: supabase.auth.signOut();
+
+    // Atualiza o estado local quando o utilizador do contexto carregar
+    useEffect(() => {
+        if (user) {
+            setUserData(prevData => ({
+                ...prevData,
+                name: user.user_metadata?.full_name || 'Ayan', // Use um fallback
+                email: user.email,
+            }));
+        }
+    }, [user]);
+
+    if (!user) {
+        return <div>Carregando informações do usuário...</div>;
     }
-    
-    // Conteúdo de cada separador
+
     const renderContent = () => {
         switch (activeTab) {
             case 'perfil':
@@ -75,8 +80,8 @@ export default function Conta() {
                         <div className="flex flex-col md:flex-row items-center gap-6">
                              <div className="relative">
                                 <div className="w-24 h-24 rounded-full bg-zinc-700 flex items-center justify-center">
-                                    {user.avatarUrl ? (
-                                        <img src={user.avatarUrl} alt="Avatar" className="w-full h-full rounded-full object-cover"/>
+                                    {userData.avatarUrl ? (
+                                        <img src={userData.avatarUrl} alt="Avatar" className="w-full h-full rounded-full object-cover"/>
                                     ) : (
                                         <User className="w-12 h-12 text-zinc-500"/>
                                     )}
@@ -86,10 +91,10 @@ export default function Conta() {
                                 </button>
                              </div>
                              <div className="flex-1 w-full">
-                                <TextInput label="Nome Completo" value={user.name} onChange={(e) => setUser({...user, name: e.target.value})} placeholder="Seu nome completo"/>
+                                <TextInput label="Nome Completo" value={userData.name} onChange={(e) => setUserData({...userData, name: e.target.value})} placeholder="Seu nome completo"/>
                              </div>
                         </div>
-                         <TextInput label="Endereço de E-mail" type="email" value={user.email} disabled={true} />
+                         <TextInput label="Endereço de E-mail" type="email" value={userData.email} disabled={true} />
                          <div className="text-right">
                             <button className="btn-legiao py-2 px-6">Salvar Alterações</button>
                          </div>
@@ -122,11 +127,11 @@ export default function Conta() {
                             <div className="flex justify-between items-center">
                                 <div>
                                     <p className="text-zinc-400 text-sm">Seu Plano Atual</p>
-                                    <p className="text-2xl font-bold text-gradient">{user.plan}</p>
+                                    <p className="text-2xl font-bold text-gradient">{userData.plan}</p>
                                 </div>
                                 <Gem className="w-10 h-10 text-[#008CFF]"/>
                             </div>
-                            <p className="text-xs text-zinc-500 mt-2">Membro desde {user.memberSince}</p>
+                            <p className="text-xs text-zinc-500 mt-2">Membro desde {userData.memberSince}</p>
                         </div>
                         <div>
                             <h4 className="font-semibold text-white mb-2">Funcionalidades Incluídas:</h4>
@@ -165,6 +170,7 @@ export default function Conta() {
                     <NavLink label="Segurança" icon={Shield} isActive={activeTab === 'seguranca'} onClick={() => setActiveTab('seguranca')} />
                     <NavLink label="Plano & Assinatura" icon={Gem} isActive={activeTab === 'plano'} onClick={() => setActiveTab('plano')} />
                     <div className="pt-4 mt-4 border-t border-zinc-800">
+                         {/* Usamos a função handleLogout do contexto aqui */}
                          <NavLink label="Sair" icon={LogOut} isActive={false} onClick={handleLogout} />
                     </div>
                 </nav>

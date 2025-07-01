@@ -1,17 +1,24 @@
-// src/pages/CPAMaximo.jsx
+// src/pages/CPAMaximo.jsx (Código completo e atualizado)
 
 import React, { useState, useMemo } from 'react';
 import PageHeader from '../components/ui/PageHeader';
-import { Trash2, PlusCircle, Calculator } from 'lucide-react';
+import { Trash2, PlusCircle } from 'lucide-react';
 
 // --- COMPONENTES DE UI OTIMIZADOS ---
 
-// Componente de Input numérico corrigido
+// Componente de Input numérico com a correção de acessibilidade
 function NumberInput({ label, value, onChange, placeholder }) {
+  // Cria um 'id' único para o campo baseado no label para a conexão de acessibilidade
+  const inputId = `cpa-input-${label.replace(/\s+/g, '-').toLowerCase()}`;
+
   return (
     <div>
-      <label className="text-sm text-zinc-400 block mb-1">{label}</label>
+      {/* O atributo 'htmlFor' conecta a label ao input pelo 'id' */}
+      <label htmlFor={inputId} className="text-sm text-zinc-400 block mb-1">
+        {label}
+      </label>
       <input
+        id={inputId}
         type="number"
         value={value === 0 ? '' : value}
         onChange={(e) => onChange(e.target.valueAsNumber || 0)}
@@ -25,13 +32,13 @@ function NumberInput({ label, value, onChange, placeholder }) {
 // Card de resultados com fontes e proporções corrigidas
 function ResultCard({ title, value, subtext, color = "white" }) {
   const colorClass = 
-    color === "green" ? "text-green-400" : // CORRIGIDO: Agora usa a cor verde para representar lucro
+    color === "green" ? "text-green-400" :
     color === "yellow" ? "text-yellow-400" :
-    color === "red" ? "text-[#ED195C]" : // Corrigido para rosa da legião
+    color === "red" ? "text-[#ED195C]" :
     "text-white";
 
   return (
-    <div className={`bg-[#1D1D1D]/50 p-5 rounded-xl border text-center flex flex-col justify-center h-full ${color === 'red' ? 'border-red-500/50' : color === 'yellow' ? 'border-yellow-400/50' : color === 'green' ? 'border-green-500/50' : 'border-zinc-700'}`}> {/* CORRIGIDO: Borda também alterada para verde */}
+    <div className={`bg-[#1D1D1D]/50 p-5 rounded-xl border text-center flex flex-col justify-center h-full ${color === 'red' ? 'border-red-500/50' : color === 'yellow' ? 'border-yellow-400/50' : color === 'green' ? 'border-green-500/50' : 'border-zinc-700'}`}>
       <h2 className="text-sm text-zinc-400 font-medium">{title}</h2>
       <p className={`font-bold text-3xl md:text-4xl ${colorClass}`}>{value}</p>
       {subtext && <p className="text-xs text-zinc-500 mt-1">{subtext}</p>}
@@ -109,14 +116,14 @@ export default function CPAMaximo() {
               
               <div className="space-y-2">
                   <h3 className="text-md font-semibold text-zinc-300 border-b border-zinc-700 pb-2">Informações do Produto</h3>
-                  <NumberInput label="Valor do Produto (R$)" value={productPrice} onChange={(e) => setProductPrice(e.target.valueAsNumber || 0)} placeholder="Digite o valor do seu produto" />
+                  <NumberInput label="Valor do Produto (R$)" value={productPrice} onChange={setProductPrice} placeholder="Digite o valor do seu produto" />
               </div>
 
               <div className="space-y-2">
                   <h3 className="text-md font-semibold text-zinc-300 border-b border-zinc-700 pb-2">Taxa de Plataforma</h3>
                    <div className="grid grid-cols-2 gap-4">
-                      <NumberInput label="Percentual (%)" value={platformPercentage} onChange={(e) => setPlatformPercentage(e.target.valueAsNumber || 0)} placeholder="Ex: 6.99" unit="%" />
-                      <NumberInput label="Taxa Fixa (R$)" value={platformFixed} onChange={(e) => setPlatformFixed(e.target.valueAsNumber || 0)} placeholder="Ex: 2.50" />
+                      <NumberInput label="Percentual (%)" value={platformPercentage} onChange={setPlatformPercentage} placeholder="Ex: 6.99" />
+                      <NumberInput label="Taxa Fixa (R$)" value={platformFixed} onChange={setPlatformFixed} placeholder="Ex: 2.50" />
                    </div>
               </div>
               
@@ -125,7 +132,7 @@ export default function CPAMaximo() {
                   {variableCosts.map(cost => (
                     <div key={cost.id} className="grid grid-cols-12 gap-2 items-center">
                       <div className="col-span-6"><input type="text" value={cost.name} onChange={(e) => updateVariableCost(cost.id, 'name', e.target.value)} placeholder="Nome do custo" className="input w-full"/></div>
-                      <div className="col-span-3"><input type="number" value={cost.value} onChange={(e) => updateVariableCost(cost.id, 'value', e.target.value)} placeholder="Valor" className="input w-full"/></div>
+                      <div className="col-span-3"><input type="number" value={String(cost.value)} onChange={(e) => updateVariableCost(cost.id, 'value', e.target.valueAsNumber || 0)} placeholder="Valor" className="input w-full"/></div>
                       <div className="col-span-2"><select value={cost.type} onChange={(e) => updateVariableCost(cost.id, 'type', e.target.value)} className="input w-full text-sm"><option value="fixed">R$</option><option value="percentage">%</option></select></div>
                       <div className="col-span-1 flex justify-end"><button onClick={() => removeVariableCost(cost.id)} className="text-red-500 hover:text-red-400 transition p-2 rounded-full"><Trash2 size={18} /></button></div>
                     </div>

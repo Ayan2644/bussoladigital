@@ -1,6 +1,10 @@
+// src/supabase.js (Código completo e atualizado)
+
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = 'https://cmgseokmesrlbypuqicn.supabase.co'
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNtZ3Nlb2ttZXNybGJ5cHVxaWNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY0NjQ3NjIsImV4cCI6MjA2MjA0MDc2Mn0.7E-G7_mGCyEZEvjaaM31Vhf3AhRlu1PCQqZ2cF0oiIQ'
+// Lê a URL e a chave do Supabase a partir das variáveis de ambiente
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-export const supabase = createClient(supabaseUrl, supabaseKey)
+// Cria e exporta o cliente do Supabase
+export const supabase = createClient(supabaseUrl, supabaseKey);

@@ -1,3 +1,5 @@
+# .gitignore (arquivo completo)
+
 # Logs
 logs
 *.log
@@ -7,6 +9,11 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Arquivos de ambiente
+.env
+.env.local
+
+# Dependências
 node_modules
 dist
 dist-ssr
